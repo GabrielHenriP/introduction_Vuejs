@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <AddTodo />
+    <AddTodo v-on:add-todo="addTodo" />
     <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" />
   </div>
 </template>
@@ -10,6 +10,8 @@
 import Header from './components/layouts/Header';
 import Todos from './components/Todos';
 import AddTodo from './components/AddTodo';
+
+import axios from 'axios'
 
 export default {
   name: 'App',
@@ -20,29 +22,28 @@ export default {
   },
   data(){
     return {
-      todos:[
-        {
-          id: 1,
-          title: 'todo 1',
-          completed: false
-        },
-        {
-          id: 2,
-          title: 'todo 2',
-          completed: false
-        },
-        {
-          id: 3,
-          title: 'todo 3',
-          completed: false
-        }
-      ]
+      todos:[]
     }
   },
   methods: {
     deleteTodo(id){
       this.todos = this.todos.filter( todo => todo.id !== id)
+    },
+    addTodo(newTodo) {
+      const { title, completed } = newTodo;
+      axios.post('https://jsonplaceholder.typicode.com/todos', {
+        title,
+        completed
+      })
+        .then( res => this.todos = [...this.todos, res.data])
+        .catch( e => console.log(e))
+      
     }
+  },
+  created() {
+    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=8')
+      .then(res => this.todos = res.data)
+      .catch( e => console.log(e))
   }
 }
 </script>
