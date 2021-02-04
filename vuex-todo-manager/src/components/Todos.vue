@@ -4,7 +4,7 @@
     <div class="todos">
       <div :key="todo.id" v-for="todo in allTodos" class="todo">
         {{ todo.title }}
-        <i class="fas fa-trash-alt" ></i>
+        <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt" ></i>
       </div>
     </div>
   </div>
@@ -17,7 +17,7 @@ export default {
   name: "Todos",
   computed: mapGetters(['allTodos']),// permite usar esse getter
   methods: {
-    ...mapActions(['fetchTodos'])
+    ...mapActions(['fetchTodos', 'deleteTodo'])
   },
   created(){
     this.fetchTodos();
