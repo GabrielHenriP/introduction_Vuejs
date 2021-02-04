@@ -1,8 +1,23 @@
 <template>
   <div>
     <h3>Todos</h3>
+     <div class="legend">
+        <span>Double click to mark as complete</span>
+        <span>
+          <span class="incomplete-box"></span> = Incomplete
+        </span>
+        <span>
+          <span class="complete-box"></span> = Complete
+        </span>
+      </div>
     <div class="todos">
-      <div :key="todo.id" v-for="todo in allTodos" class="todo">
+      <div 
+      v-for="todo in allTodos" 
+      @dblclick="onDblClick(todo)" 
+      :key="todo.id" 
+      class="todo"
+      v-bind:class="{'is-complete': todo.completed}"
+      >
         {{ todo.title }}
         <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt" ></i>
       </div>
@@ -17,7 +32,16 @@ export default {
   name: "Todos",
   computed: mapGetters(['allTodos']),// permite usar esse getter
   methods: {
-    ...mapActions(['fetchTodos', 'deleteTodo'])
+    ...mapActions(['fetchTodos', 'deleteTodo', 'updateTodo']),
+    onDblClick(todo) {
+      const updTodo = {
+        id: todo.id,
+        title: todo.title,
+        completed: !todo.completed
+      }
+      console.log(updTodo.completed)
+      this.updateTodo(updTodo)
+    }
   },
   created(){
     this.fetchTodos();
