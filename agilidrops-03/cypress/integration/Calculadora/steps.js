@@ -1,9 +1,4 @@
 
-Given(/^que eu acesso a Calculadora$/, () => {
-	cy.visit('/')
-});
-
-
 When(/^desejo realizar uma "([^"]*)"$/, (operacaoDesejada) => {
   let operador;
   switch(operacaoDesejada){
@@ -36,11 +31,15 @@ When(/^informar os valores "([^"]*)" e "([^"]*)"$/, (primeiroValor, segundoValor
   cy.get('@valores').contains(segundoValor).click()
 });
 
-And(/^finalizar a conta$/, () => {
-	
+When(/^finalizar a conta$/, () => {
+	cy.get('@operadores').contains('=').click()
 });
 
-Then(/^devo obter o resultado "([^"]*)"$/, (args1) => {
-	
+Then(/^devo obter o resultado "([^"]*)"$/, (resultadoEsperado) => {
+	cy.get('.display').as('resultado')
+
+  cy.get('@resultado')
+    .invoke('text')
+    .should('be.equal', String(resultadoEsperado))
 });
 
